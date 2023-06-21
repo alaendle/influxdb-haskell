@@ -218,7 +218,7 @@ makeLensesWith
 -- |
 -- >>> let p = writeParams "foo"
 -- >>> p ^. server.host
--- "127.0.0.1"
+-- "localhost"
 instance HasServer WriteParams where
   server = _server
 

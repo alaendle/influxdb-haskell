@@ -80,7 +80,7 @@ makeLensesWith
 
 -- |
 -- >>> pingParams ^. server.host
--- "127.0.0.1"
+-- "localhost"
 instance HasServer PingParams where
   server = _server
 
