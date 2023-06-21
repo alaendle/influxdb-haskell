@@ -25,8 +25,11 @@ jobs:
     container:
       image: buildpack-deps:bionic
     continue-on-error: ${{ matrix.allow-failure }}
-    env:
-      INFLUXDB_VERSION: 1.8.10
+    services:
+      influxdb:
+        image: influxdb:1.8.10
+        env:
+          INFLUXDB_REPORTING_DISABLED: true
     strategy:
       matrix:
         include:
@@ -60,7 +63,7 @@ jobs:
       - name: apt
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common libtinfo5
+          apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git socat software-properties-common libtinfo5
           apt-add-repository -y 'ppa:hvr/ghc'
           apt-get update
           apt-get install -y "$HCNAME"
@@ -72,6 +75,9 @@ jobs:
           HCKIND: ${{ matrix.compilerKind }}
           HCNAME: ${{ matrix.compiler }}
           HCVER: ${{ matrix.compilerVersion }}
+      - name: influxdb forward
+        run: |
+          socat TCP-LISTEN:8086,fork TCP:influxdb:8086 &
       - name: Set PATH and environment variables
         run: |
           echo "$HOME/.cabal/bin" >> $GITHUB_PATH
@@ -95,12 +101,6 @@ jobs:
           HCKIND: ${{ matrix.compilerKind }}
           HCNAME: ${{ matrix.compiler }}
           HCVER: ${{ matrix.compilerVersion }}
-      - name: Set up InfluxDB
-        run: |
-          wget -q https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
-          dpkg -x influxdb_${INFLUXDB_VERSION}_amd64.deb influxdb
-          ./influxdb/usr/bin/influxd config
-          INFLUXDB_HTTP_BIND_ADDRESS="127.0.0.1:8086" INFLUXDB_REPORTING_DISABLED="TRUE" ./influxdb/usr/bin/influxd &
       - name: env
         run: |
           env
