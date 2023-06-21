@@ -91,14 +91,14 @@ ssl :: Lens' Server Bool
 -- Default parameters:
 --
 -- >>> defaultServer ^. host
--- "localhost"
+-- "127.0.0.1"
 -- >>> defaultServer ^. port
 -- 8086
 -- >>> defaultServer ^. ssl
 -- False
 defaultServer :: Server
 defaultServer = Server
-  { _host = "localhost"
+  { _host = "127.0.0.1"
   , _port = 8086
   , _ssl = False
   }

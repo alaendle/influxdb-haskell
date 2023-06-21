@@ -576,7 +576,7 @@ makeLensesWith
 -- |
 -- >>> let p = queryParams "foo"
 -- >>> p ^. server.host
--- "localhost"
+-- "127.0.0.1"
 instance HasServer QueryParams where
   server = _server
 
