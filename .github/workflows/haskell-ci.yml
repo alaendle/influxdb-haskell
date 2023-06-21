@@ -26,7 +26,7 @@ jobs:
       image: buildpack-deps:bionic
     continue-on-error: ${{ matrix.allow-failure }}
     env:
-      INFLUXDB_VERSION: 1.8.4
+      INFLUXDB_VERSION: 1.8.10
     strategy:
       matrix:
         include:
@@ -100,7 +100,7 @@ jobs:
           wget -q https://dl.influxdata.com/influxdb/releases/influxdb_${INFLUXDB_VERSION}_amd64.deb
           dpkg -x influxdb_${INFLUXDB_VERSION}_amd64.deb influxdb
           ./influxdb/usr/bin/influxd config
-          ./influxdb/usr/bin/influxd &
+          ./influxdb/usr/bin/influxd  --http-bind-address 127.0.0.1:8086 --reporting-disabled &
       - name: env
         run: |
           env
